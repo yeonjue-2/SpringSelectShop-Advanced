@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -37,6 +39,9 @@ public class Product extends Timestamped{
     @Column(nullable = false)
     private Long userId;
 
+    @ManyToMany
+    private List<Folder> folderList = new ArrayList<>();
+
     public Product(ProductRequest request, Long userId) {
         this.title = request.getTitle();
         this.image = request.getImage();
@@ -54,4 +59,7 @@ public class Product extends Timestamped{
         this.lprice = itemDto.getLprice();
     }
 
+    public void addFolder(Folder folder) {
+        this.folderList.add(folder);
+    }
 }

@@ -3,11 +3,13 @@ package com.example.springselectshop.service;
 import com.example.springselectshop.dto.ProductMypriceRequest;
 import com.example.springselectshop.dto.ProductRequest;
 import com.example.springselectshop.dto.ProductResponse;
+import com.example.springselectshop.entity.Folder;
 import com.example.springselectshop.entity.Product;
 import com.example.springselectshop.entity.User;
 import com.example.springselectshop.entity.UserRoleEnum;
 import com.example.springselectshop.jwt.JwtUtil;
 import com.example.springselectshop.naver.ItemDto;
+import com.example.springselectshop.repository.FolderRepository;
 import com.example.springselectshop.repository.ProductRepository;
 import com.example.springselectshop.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -20,8 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +29,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final FolderRepository folderRepository;
     private final JwtUtil jwtUtil;
 
     @Transactional
@@ -151,4 +152,47 @@ public class ProductService {
         product.updateByItemDto(itemDto);
     }
 
+    @Transactional
+    public Product addFolder(Long productId, Long folderId, HttpServletRequest request) {
+        // Request에서 Token 가져오기
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        // 토큰이 있는 경우에만 관심상품 최저가 업데이트 가능
+        if (token != null) {
+            // Token 검증
+            if (jwtUtil.validateToken(token)) {
+                // 토큰에서 사용자 정보 가져오기
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+
+            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+
+            // 1) 관심상품을 조회합니다.
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new NullPointerException("해당 상품 아이디가 존재하지 않습니다."));
+
+            // 2) 폴더를 조회합니다.
+            Folder folder = folderRepository.findById(folderId)
+                    .orElseThrow(() -> new NullPointerException("해당 폴더 아이디가 존재하지 않습니다."));
+
+            // 3) 조회한 폴더와 관심상품이 모두 로그인한 회원의 소유인지 확인합니다.
+            Long loginUserId = user.getId();
+            if (!product.getUserId().equals(loginUserId) || !folder.getUser().getId().equals(loginUserId)) {
+                throw new IllegalArgumentException("회원님의 관심상품이 아니거나, 회원님의 폴더가 아닙니다~^^");
+            }
+
+            // 4) 상품에 폴더를 추가합니다.
+            product.addFolder(folder);
+
+            return product;
+        } else {
+            return null;
+        }
+    }
 }

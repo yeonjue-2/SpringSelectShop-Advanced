@@ -343,11 +343,6 @@ function addInputForProductToFolder(productId, button) {
     });
 }
 
-function addProductToFolder() {
-
-}
-
-
 function setMyprice() {
     /**
      * 1. id가 myprice 인 input 태그에서 값을 가져온다.
