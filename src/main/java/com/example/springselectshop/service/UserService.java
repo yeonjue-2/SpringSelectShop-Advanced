@@ -37,6 +37,7 @@ public class UserService {
         String email = request.getEmail();
         // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
+
         if (request.isAdmin()) {
             if (!request.getAdminToken().equals(ADMIN_TOKEN)) {
                 throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");

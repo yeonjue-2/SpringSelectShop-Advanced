@@ -3,8 +3,10 @@ package com.example.springselectshop.controller;
 import com.example.springselectshop.dto.ProductMypriceRequest;
 import com.example.springselectshop.dto.ProductRequest;
 import com.example.springselectshop.dto.ProductResponse;
+import com.example.springselectshop.entity.Product;
 import com.example.springselectshop.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +29,15 @@ public class ProductController {
 
     // 관심 상품 조회하기
     @GetMapping("/products")
-    public List<ProductResponse> getProducts(HttpServletRequest request) {
+    public Page<Product> getProducts(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc,
+            HttpServletRequest request
+    ) {
         // 응답 보내기
-        return productService.getProducts(request);
+        return productService.getProducts(request, page-1, size, sortBy, isAsc);
     }
 
     // 관심 상품 최저가 등록하기

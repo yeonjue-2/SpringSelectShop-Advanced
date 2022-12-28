@@ -32,12 +32,6 @@ public class UserController {
         return "redirect:/api/user/login";
     }
 
-//    @PostMapping("/login")
-//    public String login(LoginRequest request) {
-//        userService.login(request);
-//        return "redirect:/api/shop";
-//    }
-
     @ResponseBody
     @PostMapping("/login")
     public String login(@RequestBody  LoginRequest request, HttpServletResponse response) {
