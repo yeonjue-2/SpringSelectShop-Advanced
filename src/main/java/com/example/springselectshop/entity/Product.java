@@ -62,4 +62,13 @@ public class Product extends Timestamped{
     public void addFolder(Folder folder) {
         this.folderList.add(folder);
     }
+
+    public boolean isExistProductInFolder(Folder folder) {
+        for (Folder folders : this.folderList) {
+            if (folders.equals(folder)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
