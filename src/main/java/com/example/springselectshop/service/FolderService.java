@@ -43,11 +43,15 @@ public class FolderService {
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
 
+            List<Folder> existFolderList = folderRepository.findAllByUserAndNameIn(user, folderNames);
+
             List<Folder> folders = new ArrayList<>();
 
             for (String folderName : folderNames) {
-                Folder folder = new Folder(folderName, user);
-                folders.add(folder);
+                if (!isExistFolderName(folderName, existFolderList)) {
+                    Folder folder = new Folder(folderName, user);
+                    folders.add(folder);
+                }
             }
 
             return folderRepository.saveAll(folders);
@@ -118,5 +122,16 @@ public class FolderService {
         } else {
             return null;
         }
+    }
+
+    private boolean isExistFolderName(String folderName, List<Folder> existFolderList) {
+        // 기존 폴더 리스트에서 folder name 이 있는지?
+        for (Folder existFolder : existFolderList) {
+            if (existFolder.getName().equals(folderName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
