@@ -131,7 +131,6 @@ public class FolderService {
                 return true;
             }
         }
-
         return false;
     }
 }
