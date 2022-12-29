@@ -64,6 +64,5 @@ public class UserService {
 
         // JWT 활용 시 추가
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
-
     }
 }
