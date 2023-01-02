@@ -6,7 +6,6 @@ import com.example.springselectshop.entity.Product;
 import com.example.springselectshop.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
