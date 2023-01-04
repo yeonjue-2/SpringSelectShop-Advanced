@@ -21,7 +21,7 @@ public class UserController {
         return new ModelAndView("signup");
     }
 
-    @GetMapping("/login")
+    @GetMapping("/login-page")
     public ModelAndView loginPage() {
         return new ModelAndView("login");
     }
@@ -29,14 +29,24 @@ public class UserController {
     @PostMapping("/signup")
     public String signup(SignupRequest request) {
         userService.signup(request);
-        return "redirect:/api/user/login";
+        return "redirect:/api/user/login-page";
     }
 
     @ResponseBody
     @PostMapping("/login")
-    public String login(@RequestBody  LoginRequest request, HttpServletResponse response) {
+    public String login(@RequestBody LoginRequest request, HttpServletResponse response) {
         userService.login(request, response);
         return "success";
+    }
+
+    @GetMapping("/forbidden")
+    public ModelAndView getForbidden() {
+        return new ModelAndView("forbidden");
+    }
+
+    @PostMapping("/forbidden")
+    public ModelAndView postForbidden() {
+        return new ModelAndView("forbidden");
     }
 
 }
