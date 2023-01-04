@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,13 +25,14 @@ public class ShopController {
         return new ModelAndView("index");
     }
 
+
     // 로그인 한 유저가 메인페이지를 요청할 때 가지고있는 폴더를 반환
     @GetMapping("/user-folder")
-    public String getUserInfo(Model model, HttpServletRequest request) {
+    public String getUserInfo(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        model.addAttribute("folders", folderService.getFolders(request));
+        model.addAttribute("folders", folderService.getFolders(userDetails.getUser()));
 
-        return "/index :: #fragment";    // 비동기적으로 어느 한 부분만 바꿔줌
+        return "index :: #fragment";
     }
 
     // 로그인 한 유저가 메인페이지를 요청할 때 유저의 이름 반환
