@@ -22,7 +22,7 @@ public class ProductController {
     private final ProductService productService;
 
     // 관심 상품 등록하기
-    @Secured(UserRoleEnum.Authority.ADMIN)
+   // @Secured(UserRoleEnum.Authority.ADMIN)
     @PostMapping("/products")
     public ProductResponse createProduct(@RequestBody ProductRequest requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 응답 보내기
